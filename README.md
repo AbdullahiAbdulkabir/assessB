@@ -9,7 +9,7 @@ Clone the repository and install dependencies:
 cd backend
 
 # Install PHP dependencies
-composer install
+cd backend && composer install
 ```
 
 ## Environment Configuration
@@ -17,23 +17,23 @@ composer install
 Copy the example environment file and set up the required configurations:
 
 ```bash
-cp .env.example .env
+cd backend && cp .env.example .env
 ```
 
 Generate the application key:
 
 ```bash
-php artisan key:generate
+cd backend && php artisan key:generate
 ```
 
 Run migration:
 ```bash
-php artisan migrate
+cd backend && php artisan migrate
 ```
 
 Seed some projects:
 ```bash
-php artisan db:seed
+cd backend && php artisan db:seed
 ```
 
 ## Running the Application
@@ -41,13 +41,13 @@ php artisan db:seed
 Start the development server:
 
 ```bash
-php artisan serve
+cd backend && php artisan serve
 ```
 
 Visit the url.
 
 ```bash
-./vendor/bin/sail up
+cd backend && ./vendor/bin/sail up
 ```
 ## Deployment
 
@@ -56,7 +56,7 @@ Visit the url.
 For production deployment, set up your web server:
 
 ```bash
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+cd backend && php artisan config:cache
+cd backend && php artisan route:cache
+cd backend && php artisan view:cache
 ```
