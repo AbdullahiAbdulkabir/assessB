@@ -8,9 +8,9 @@ export default function AchievementCard({ achievement, onClick }) {
             className="group text-center focus:outline-none"
         >
             <div className="mx-auto w-24 h-24 grid place-items-center">
-                {achievement.icon ? (
+                {achievement.badge ? (
                     <img
-                        src={achievement.icon}
+                        src={achievement.badge}
                         alt={achievement.name}
                         className={`w-24 h-24 transition ${
                             locked ? "opacity-30 grayscale" : "opacity-100"
@@ -22,7 +22,7 @@ export default function AchievementCard({ achievement, onClick }) {
                             locked ? "bg-slate-50 border-slate-200" : "bg-white border-slate-200"
                         }`}
                     >
-                        <span className="text-slate-400 text-xs px-3">No icon</span>
+                        <span className="text-slate-400 text-xs px-3">No badge</span>
                     </div>
                 )}
             </div>
