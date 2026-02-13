@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -56,5 +57,37 @@ class User extends Authenticatable
     public function achievements(): HasMany
     {
         return $this->hasMany(UserAchievement::class);
+    }
+
+    public function currentAchievement(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Achievement::class,
+            UserAchievement::class,
+            'user_id',
+            'id',
+            'id',
+            'achievement_id'
+        )->latestOfMany();
+    }
+
+    public function unlockedAchievements(): array
+    {
+        return Achievement::where('no_of_orders', '<=', $this->currentAchievement->no_of_orders)->pluck('name')->toArray() ?? [];
+    }
+
+    public function nextAvailableAchievements(): array
+    {
+        return Achievement::where('no_of_orders', '>=', $this->currentAchievement->no_of_orders)->pluck('name')->toArray() ?? [];
+    }
+
+    public function nextAvailableAchievementsCount(): int
+    {
+        return count($this->nextAvailableAchievements());
+    }
+
+    public function nextAchievement()
+    {
+        return Achievement::where('no_of_orders', '>', $this->orders()->count())->first();
     }
 }

@@ -6,5 +6,5 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::prefix('users')->group(function (Router $users) {
-    $users->get('{user:uuid}', [UserController::class, 'achievements']);
+    $users->get('{user:uuid}/achievements', [UserController::class, 'achievements']);
 });

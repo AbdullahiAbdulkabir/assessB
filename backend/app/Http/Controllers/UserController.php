@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserAchievementResource;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
-    public function achievements(): JsonResponse
+    public function achievements(UserService $userService): JsonResponse
     {
+        //picking the first user for test purpose only
         $user = User::first();
 
-        return $this->success('Achievements retrieved', UserAchievementResource::make($user));
+        $achievements = $userService->achievements($user);
+
+        return $this->success('Achievements retrieved', $achievements);
     }
 }
