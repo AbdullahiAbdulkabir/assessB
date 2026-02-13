@@ -1,37 +1,64 @@
+import { Box, Typography, ButtonBase, Chip, Stack } from "@mui/material";
+
 export default function AchievementCard({ achievement, onClick }) {
     const locked = !achievement.unlocked;
 
     return (
-        <button
-            type="button"
+        <ButtonBase
             onClick={onClick}
-            className="group text-center focus:outline-none"
+            sx={{ width: "100%", borderRadius: 2, textAlign: "center", p: 1.5 }}
         >
-            <div className="mx-auto w-24 h-24 grid place-items-center">
-                {achievement.badge ? (
-                    <img
-                        src={achievement.badge}
-                        alt={achievement.name}
-                        className={`w-24 h-24 transition ${
-                            locked ? "opacity-30 grayscale" : "opacity-100"
-                        } group-hover:scale-[1.03]`}
-                    />
-                ) : (
-                    <div
-                        className={`w-24 h-24 rounded-full border grid place-items-center ${
-                            locked ? "bg-slate-50 border-slate-200" : "bg-white border-slate-200"
-                        }`}
-                    >
-                        <span className="text-slate-400 text-xs px-3">No badge</span>
-                    </div>
-                )}
-            </div>
+            <Box sx={{ width: "100%" }}>
+                <Box sx={{ display: "grid", placeItems: "center", position: "relative" }}>
+                    {achievement.badge ? (
+                        <Box
+                            component="img"
+                            src={achievement.badge}
+                            alt={achievement.name}
+                            sx={{
+                                width: 96,
+                                height: 96,
+                                borderRadius: "999px",
+                                objectFit: "cover",
+                                opacity: locked ? 0.35 : 1,
+                                filter: locked ? "grayscale(100%)" : "none",
+                            }}
+                        />
+                    ) : (
+                        <Box
+                            sx={{
+                                width: 96,
+                                height: 96,
+                                borderRadius: "999px",
+                                bgcolor: "#F3F4F6",
+                                border: "1px solid #E5E7EB",
+                            }}
+                        />
+                    )}
 
-            <p className="mt-3 font-semibold text-slate-800">{achievement.name}</p>
+                    {achievement.isNext && !achievement.unlocked && (
+                        <Chip
+                            label="Next"
+                            size="small"
+                            sx={{
+                                position: "absolute",
+                                bottom: -6,
+                                bgcolor: "#EEF2FF",
+                                color: "#3730A3",
+                                fontWeight: 800,
+                            }}
+                        />
+                    )}
+                </Box>
 
-            <p className="text-xs mt-1 text-slate-500">
-                {locked ? "Locked" : "Unlocked"}
-            </p>
-        </button>
+                <Typography sx={{ mt: 1.5, fontWeight: 800, color: "#111827" }}>
+                    {achievement.name}
+                </Typography>
+
+                <Typography variant="caption" sx={{ color: "#667085" }}>
+                    {locked ? `Unlock at ${achievement.no_of_orders} orders` : "Unlocked"}
+                </Typography>
+            </Box>
+        </ButtonBase>
     );
 }

@@ -1,71 +1,89 @@
-import { useEffect, useMemo, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import {
     Avatar,
     Box,
     Card,
+    Chip,
     CircularProgress,
+    Divider,
     Grid,
     Stack,
     Typography,
-    Chip,
-    Divider,
 } from "@mui/material";
 import AchievementGrid from "../achievement/AchievementGrid.jsx";
 import AchievementModal from "../achievement/AchievementModal.jsx";
+import {apiGet} from "../../api/achievements.js";
 
-export default function UserDashboard({ userId, userName = "Friend", userAvatar = "" }) {
-    const [data, setData] = useState(null);
+export default function UserDashboard({userId, userName = "Friend", userAvatar = ""}) {
+    const [userAchData, setUserAchData] = useState(null); // /users/:id/achievements
+    const [allAchievements, setAllAchievements] = useState(null); // /achievements
     const [selectedAchievement, setSelectedAchievement] = useState(null);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5101/api/users/${userId}/achievements`)
-            .then((res) => res.json())
-            .then((res) => setData(res.data))
+        let alive = true;
+
+        Promise.all([
+            apiGet(`/users/${userId}/achievements`),
+            apiGet(`/achievements`),
+        ])
+            .then(([userRes, allRes]) => {
+                if (!alive) return;
+                setUserAchData(userRes.data);
+                setAllAchievements(allRes.data);
+            })
             .catch(console.error);
+
+        return () => {
+            alive = false;
+        };
     }, [userId]);
 
-    // Build achievements list from your API structure (names only)
     const achievements = useMemo(() => {
-        if (!data) return [];
-        const unlockedSet = new Set(data.unlocked_achievements || []);
+        if (!userAchData || !Array.isArray(allAchievements)) return [];
 
-        const allNames = Array.from(
-            new Set([
-                ...(data.unlocked_achievements || []),
-                ...(data.next_available_achievements || []),
-            ])
-        );
+        const unlockedSet = new Set(userAchData.unlocked_achievements || []);
+        const nextSet = new Set(userAchData.next_available_achievements || []);
 
-        return allNames.map((name, idx) => ({
-            id: `${idx}-${name}`,
-            name,
-            unlocked: unlockedSet.has(name),
-            // optional fields (safe if missing)
-            icon: "", // if you later add icons mapping, put it here
-            message: "",
-            description: "",
+        const sorted = [...allAchievements].sort((a, b) => (a.no_of_orders || 0) - (b.no_of_orders || 0));
+
+        return sorted.map((a) => ({
+            id: a.id,
+            name: a.name,
+            slug: a.slug,
+            description: a.description,
+            icon: a.badge,
+            badge: a.badge,
+            no_of_orders: a.no_of_orders,
+            unlocked: unlockedSet.has(a.name),
+            isNext: nextSet.has(a.name),
         }));
-    }, [data]);
+    }, [userAchData, allAchievements]);
 
-    if (!data) {
+    if (!userAchData || !allAchievements) {
         return (
-            <Box sx={{ p: 6, display: "grid", placeItems: "center" }}>
-                <CircularProgress />
+            <Box sx={{p: 6, display: "grid", placeItems: "center"}}>
+                <CircularProgress/>
             </Box>
         );
     }
 
-    const unlockedSet = new Set(data.unlocked_achievements || []);
-    const nextAvailable = (data.next_available_achievements || []).filter(
+    const unlockedSet = new Set(userAchData.unlocked_achievements || []);
+    const nextAvailableNames = (userAchData.next_available_achievements || []).filter(
         (n) => !unlockedSet.has(n)
     );
 
-    const hasCurrentBadge = Boolean(data.current_badge);
-    const hasNextBadge = Boolean(data.next_badge);
+    const hasCurrentBadge = Boolean(userAchData.current_badge);
+    const hasNextBadge = Boolean(userAchData.next_badge);
+
+    const highestUnlocked = [...achievements]
+        .filter((a) => a.unlocked)
+        .sort((a, b) => (b.no_of_orders || 0) - (a.no_of_orders || 0))[0];
+
+    const currentBadgeToShow = userAchData.current_badge || highestUnlocked?.badge || null;
 
     return (
-        <Box sx={{ minHeight: "100vh", bgcolor: "#F6F7FB", py: 6 }}>
-            <Box sx={{ maxWidth: 1100, mx: "auto", px: 3 }}>
+        <Box sx={{minHeight: "100vh", bgcolor: "#F6F7FB", py: 6}}>
+            <Box sx={{maxWidth: 1100, mx: "auto", px: 3}}>
                 <Card
                     elevation={0}
                     sx={{
@@ -75,19 +93,18 @@ export default function UserDashboard({ userId, userName = "Friend", userAvatar 
                     }}
                 >
                     <Grid container>
-                        {/* LEFT PANEL */}
                         <Grid
                             item
                             xs={12}
                             md={4}
                             sx={{
                                 p: 4,
-                                borderRight: { md: "1px solid #EEF0F6" },
-                                borderBottom: { xs: "1px solid #EEF0F6", md: "none" },
+                                borderRight: {md: "1px solid #EEF0F6"},
+                                borderBottom: {xs: "1px solid #EEF0F6", md: "none"},
                             }}
                         >
                             <Stack direction="row" spacing={2} alignItems="center">
-                                <Box sx={{ position: "relative" }}>
+                                <Box sx={{position: "relative"}}>
                                     <Avatar
                                         src={userAvatar}
                                         alt="User"
@@ -118,45 +135,54 @@ export default function UserDashboard({ userId, userName = "Friend", userAvatar 
                                 </Box>
 
                                 <Box>
-                                    <Typography variant="h6" sx={{ fontWeight: 900 }}>
+                                    <Typography variant="h6" sx={{fontWeight: 900}}>
                                         You’ve got this,{" "}
-                                        <span style={{ color: "#667085" }}>{userName}!</span>
+                                        <span style={{color: "#667085"}}>{userName}!</span>
                                     </Typography>
-                                    <Typography variant="body2" sx={{ color: "#667085", mt: 0.5 }}>
+                                    <Typography variant="body2" sx={{color: "#667085", mt: 0.5}}>
                                         Keep unlocking achievements.
                                     </Typography>
                                 </Box>
                             </Stack>
 
-                            <Divider sx={{ my: 4 }} />
+                            <Divider sx={{my: 4}}/>
 
-                            {/* CURRENT BADGE (only show if present) */}
-                            {hasCurrentBadge && (
+                            {/* CURRENT BADGE (derived if needed) */}
+                            {currentBadgeToShow && (
                                 <Box>
-                                    <Typography variant="overline" sx={{ color: "#667085" }}>
+                                    <Typography variant="overline" sx={{color: "#667085"}}>
                                         Current Badge
                                     </Typography>
 
-                                    <Stack direction="row" spacing={2} sx={{ mt: 2 }} alignItems="center">
+                                    <Stack direction="row" spacing={2} sx={{mt: 2}}
+                                           alignItems="center">
                                         <Box
                                             component="img"
-                                            src={data.current_badge}
+                                            src={currentBadgeToShow}
                                             alt="Current Badge"
-                                            sx={{ width: 52, height: 52, borderRadius: 1 }}
+                                            sx={{
+                                                width: 52,
+                                                height: 52,
+                                                borderRadius: 1,
+                                                objectFit: "cover"
+                                            }}
                                         />
                                         <Box>
-                                            <Typography sx={{ fontWeight: 800 }}>Current Badge</Typography>
-                                            <Typography variant="body2" sx={{ color: "#667085" }}>
-                                                Keep it up!
+                                            <Typography sx={{fontWeight: 800}}>
+                                                {highestUnlocked?.name || "Current Badge"}
+                                            </Typography>
+                                            <Typography variant="body2" sx={{color: "#667085"}}>
+                                                {highestUnlocked
+                                                    ? `Unlocked at ${highestUnlocked.no_of_orders} orders`
+                                                    : "Keep it up!"}
                                             </Typography>
                                         </Box>
                                     </Stack>
 
-                                    <Divider sx={{ my: 3 }} />
+                                    <Divider sx={{my: 3}}/>
                                 </Box>
                             )}
 
-                            {/* NEXT BADGE (show if present) */}
                             {hasNextBadge && (
                                 <Box
                                     sx={{
@@ -166,28 +192,32 @@ export default function UserDashboard({ userId, userName = "Friend", userAvatar 
                                         p: 2,
                                     }}
                                 >
-                                    <Typography variant="body2" sx={{ color: "#111827" }}>
-                                        <b>{data.remaining_to_unlock_next_badge ?? 0}</b> more badge(s) to go
+                                    <Typography variant="body2" sx={{color: "#111827"}}>
+                                        <b>{userAchData.remaining_to_unlock_next_badge ?? 0}</b> more
+                                        achievement(s) to unlock next badge
                                     </Typography>
 
-                                    <Stack direction="row" spacing={2} sx={{ mt: 2 }} alignItems="center">
+                                    <Stack direction="row" spacing={2} sx={{mt: 2}}
+                                           alignItems="center">
                                         <Box
                                             component="img"
-                                            src={data.next_badge}
+                                            src={userAchData.next_badge}
                                             alt="Next Badge"
                                             sx={{
                                                 width: 44,
                                                 height: 44,
                                                 borderRadius: 1,
-                                                objectFit: "cover",
+                                                objectFit: "cover"
                                             }}
                                         />
                                         <Box>
-                                            <Typography sx={{ fontWeight: 800, fontSize: 14 }}>
+                                            <Typography sx={{fontWeight: 800, fontSize: 14}}>
                                                 Next Badge
                                             </Typography>
-                                            <Typography variant="caption" sx={{ color: "#667085" }}>
-                                                Unlock {data.remaining_to_unlock_next_badge ?? 0} more achievements
+                                            <Typography variant="caption" sx={{color: "#667085"}}>
+                                                {nextAvailableNames.length
+                                                    ? `Up next: ${nextAvailableNames[0]}`
+                                                    : "You're close—keep going."}
                                             </Typography>
                                         </Box>
                                     </Stack>
@@ -196,24 +226,25 @@ export default function UserDashboard({ userId, userName = "Friend", userAvatar 
                         </Grid>
 
                         {/* RIGHT PANEL */}
-                        <Grid item xs={12} md={8} sx={{ p: 4 }}>
+                        <Grid item xs={12} md={8} sx={{p: 4}}>
                             <Stack
                                 direction="row"
                                 alignItems="baseline"
                                 justifyContent="space-between"
-                                sx={{ mb: 3 }}
+                                sx={{mb: 3}}
                             >
                                 <Box>
-                                    <Typography variant="h6" sx={{ fontWeight: 900 }}>
+                                    <Typography variant="h6" sx={{fontWeight: 900}}>
                                         Achievements
                                     </Typography>
-                                    <Typography variant="body2" sx={{ color: "#667085", mt: 0.5 }}>
+                                    <Typography variant="body2" sx={{color: "#667085", mt: 0.5}}>
                                         Tap a badge to view details.
                                     </Typography>
                                 </Box>
                             </Stack>
 
-                            <AchievementGrid achievements={achievements} onSelect={setSelectedAchievement} />
+                            <AchievementGrid achievements={achievements}
+                                             onSelect={setSelectedAchievement}/>
                         </Grid>
                     </Grid>
                 </Card>
@@ -221,7 +252,7 @@ export default function UserDashboard({ userId, userName = "Friend", userAvatar 
                 {selectedAchievement && (
                     <AchievementModal
                         achievement={selectedAchievement}
-                        nextAvailable={nextAvailable}
+                        nextAvailable={nextAvailableNames}
                         onClose={() => setSelectedAchievement(null)}
                     />
                 )}
