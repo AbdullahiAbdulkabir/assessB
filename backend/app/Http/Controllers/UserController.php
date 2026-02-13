@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PurchaseEvent;
 use App\Http\Resources\UserAchievementResource;
 use App\Models\User;
 use App\Services\UserService;

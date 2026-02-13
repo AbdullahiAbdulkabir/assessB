@@ -21,6 +21,8 @@ class Cashback
      */
     public function handle(BadgeUnlocked $event): void
     {
-        //
+        $user = $event->user;
+
+        \Log::info("Paying cashback of #300 to User ID {$event->user->id}");
     }
 }
