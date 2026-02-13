@@ -2,18 +2,13 @@
 
 namespace App\Services;
 
+use App\Http\Resources\UserAchievementResource;
 use App\Models\User;
 
 class UserService
 {
-    public function achievements(User $user): array
+    public function achievements(User $user): UserAchievementResource
     {
-        return [
-            'unlocked_achievements' => $user->unlockedAchievements(),
-            'next_available_achievements' => $user->nextAvailableAchievements(),
-            'current_badge' => $user->currentAchievement?->badge,
-            'next_badge' => $user->nextAchievement()?->badge,
-            'remaining_to_unlock_next_badge' =>  $user->nextAvailableAchievementsCount()
-        ];
+        return UserAchievementResource::make($user);
     }
 }
