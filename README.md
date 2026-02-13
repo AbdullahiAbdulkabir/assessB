@@ -71,3 +71,14 @@ cd backend && php artisan config:cache
 cd backend && php artisan route:cache
 cd backend && php artisan view:cache
 ```
+
+For the frontend 
+Use npm or yarn
+```bash
+npm install
+```
+
+Use npm or yarn
+```bash
+yarn install
+```

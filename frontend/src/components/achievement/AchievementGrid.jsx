@@ -1,15 +1,22 @@
+import { Grid } from "@mui/material";
 import AchievementCard from "./AchievementCard.jsx";
 
 export default function AchievementGrid({ achievements, onSelect }) {
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+        <Grid
+            container
+            spacing={3}
+            justifyContent="center"
+        >
             {achievements.map((achievement) => (
-                <AchievementCard
-                    key={achievement.id}
-                    achievement={achievement}
-                    onClick={() => onSelect(achievement)}
-                />
+                <Grid item xs={6} key={achievement.id}>
+                    <AchievementCard
+                        achievement={achievement}
+                        onClick={() => onSelect(achievement)}
+                    />
+                </Grid>
             ))}
-        </div>
+        </Grid>
+
     );
 }

@@ -3,7 +3,6 @@ import {
     Dialog,
     DialogContent,
     IconButton,
-    Stack,
     Typography,
     Chip,
     Divider,
@@ -28,7 +27,6 @@ export default function AchievementModal({ achievement, nextAvailable, onClose }
             </IconButton>
 
             <DialogContent sx={{ p: 0 }}>
-                {/* Top content */}
                 <Box sx={{ p: 6, textAlign: "center" }}>
                     <Box sx={{ display: "grid", placeItems: "center" }}>
                         {achievement?.icon ? (
@@ -67,7 +65,6 @@ export default function AchievementModal({ achievement, nextAvailable, onClose }
 
                 <Divider />
 
-                {/* Up next */}
                 <Box sx={{ p: 4 }}>
                     <Typography
                         variant="overline"

@@ -15,16 +15,16 @@ import AchievementModal from "../achievement/AchievementModal.jsx";
 import {apiGet} from "../../api/achievements.js";
 
 export default function UserDashboard({userId, userName = "Friend", userAvatar = ""}) {
-    const [userAchData, setUserAchData] = useState(null); // /users/:id/achievements
-    const [allAchievements, setAllAchievements] = useState(null); // /achievements
+    const [userAchData, setUserAchData] = useState(null);
+    const [allAchievements, setAllAchievements] = useState(null);
     const [selectedAchievement, setSelectedAchievement] = useState(null);
 
     useEffect(() => {
         let alive = true;
 
         Promise.all([
-            apiGet(`/users/${userId}/achievements`),
-            apiGet(`/achievements`),
+            apiGet(`users/${userId}/achievements`),
+            apiGet(`achievements`),
         ])
             .then(([userRes, allRes]) => {
                 if (!alive) return;
@@ -72,7 +72,6 @@ export default function UserDashboard({userId, userName = "Friend", userAvatar =
         (n) => !unlockedSet.has(n)
     );
 
-    const hasCurrentBadge = Boolean(userAchData.current_badge);
     const hasNextBadge = Boolean(userAchData.next_badge);
 
     const highestUnlocked = [...achievements]
@@ -147,7 +146,7 @@ export default function UserDashboard({userId, userName = "Friend", userAvatar =
 
                             <Divider sx={{my: 4}}/>
 
-                            {/* CURRENT BADGE (derived if needed) */}
+
                             {currentBadgeToShow && (
                                 <Box>
                                     <Typography variant="overline" sx={{color: "#667085"}}>
@@ -194,7 +193,7 @@ export default function UserDashboard({userId, userName = "Friend", userAvatar =
                                 >
                                     <Typography variant="body2" sx={{color: "#111827"}}>
                                         <b>{userAchData.remaining_to_unlock_next_badge ?? 0}</b> more
-                                        achievement(s) to unlock next badge
+                                        achievement(s)
                                     </Typography>
 
                                     <Stack direction="row" spacing={2} sx={{mt: 2}}
@@ -225,26 +224,33 @@ export default function UserDashboard({userId, userName = "Friend", userAvatar =
                             )}
                         </Grid>
 
-                        {/* RIGHT PANEL */}
-                        <Grid item xs={12} md={8} sx={{p: 4}}>
-                            <Stack
-                                direction="row"
-                                alignItems="baseline"
-                                justifyContent="space-between"
-                                sx={{mb: 3}}
-                            >
-                                <Box>
-                                    <Typography variant="h6" sx={{fontWeight: 900}}>
-                                        Achievements
-                                    </Typography>
-                                    <Typography variant="body2" sx={{color: "#667085", mt: 0.5}}>
-                                        Tap a badge to view details.
-                                    </Typography>
-                                </Box>
-                            </Stack>
 
-                            <AchievementGrid achievements={achievements}
-                                             onSelect={setSelectedAchievement}/>
+                        <Grid item xs={12} md={8} sx={{ p: 4 }}>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    textAlign: "center",
+                                    mb: 4,
+                                }}
+                            >
+                                <Typography variant="h6" sx={{ fontWeight: 900 }}>
+                                    Achievements
+                                </Typography>
+
+                                <Typography
+                                    variant="body2"
+                                    sx={{ color: "#667085", mt: 0.5 }}
+                                >
+                                    Tap a badge to view details.
+                                </Typography>
+                            </Box>
+
+                            <AchievementGrid
+                                achievements={achievements}
+                                onSelect={setSelectedAchievement}
+                            />
                         </Grid>
                     </Grid>
                 </Card>
