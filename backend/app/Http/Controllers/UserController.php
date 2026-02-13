@@ -10,8 +10,6 @@ class UserController extends Controller
 {
     public function achievements(User $user, UserService $userService): JsonResponse
     {
-        //picking the first user for test purpose only
-
         $achievements = $userService->achievements($user);
 
         return $this->success('Achievements retrieved', $achievements);
