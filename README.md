@@ -47,6 +47,8 @@ Start the development server:
 cd backend && php artisan serve
 ```
 
+shows up on http://127.0.0.1:8000
+
 Test purchase trigger for default user:
 
 ```bash
@@ -82,3 +84,5 @@ Use npm or yarn
 ```bash
 yarn install
 ```
+
+Frontend get loaded here http://localhost:5173/
