@@ -31,7 +31,7 @@ Run migration:
 cd backend && php artisan migrate
 ```
 
-Seed some projects:
+Seed some users and the achievement:
 ```bash
 cd backend && php artisan db:seed
 ```
