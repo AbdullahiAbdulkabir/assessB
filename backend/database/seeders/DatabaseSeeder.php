@@ -33,8 +33,8 @@ class DatabaseSeeder extends Seeder
 
         $achievements = [
             ['name' => "Baby Shopper", 'no_of_orders' => 5, 'badge' => "https://template.canva.com/EAGpJXD4VvY/1/5/1131w-U8uYaQbecAM.jpg"],
-            ['name' => "Medium Shopper", 'no_of_orders' => 10, 'badge' => "https://www.koolbadges.co.uk/images/thumbnails/five-400x400.jpg"],
-            ['name' => "High Shopper", 'no_of_orders' => 20, 'badge' => "https://www.koolbadges.co.uk/images/thumbnails/five-400x400.jpg"],
+            ['name' => "Medium Shopper", 'no_of_orders' => 10, 'badge' => "https://www.svgrepo.com/show/452101/silver-medal.svg"],
+            ['name' => "High Shopper", 'no_of_orders' => 20, 'badge' => "https://uxwing.com/wp-content/themes/uxwing/download/sport-and-awards/achievement-award-medal-icon.png"],
         ];
 
         collect($achievements)->each(function ($achievement) {
