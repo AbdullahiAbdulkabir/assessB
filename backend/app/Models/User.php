@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -81,9 +80,11 @@ class User extends Authenticatable
         return Achievement::where('no_of_orders', '>=', $this->currentAchievement?->no_of_orders ?? 0)->pluck('name')->toArray() ?? [];
     }
 
-    public function nextAvailableAchievementsCount(): int
+    public function remainingToUnlockAchievementsCount(): int
     {
-        return count($this->nextAvailableAchievements());
+        $nextAchievement = $this->nextAchievement()?->no_of_orders ?? 0;
+
+        return $nextAchievement - $this->orders()->count();
     }
 
     public function nextAchievement()

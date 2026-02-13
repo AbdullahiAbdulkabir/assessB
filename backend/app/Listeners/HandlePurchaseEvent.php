@@ -3,11 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\AchievementUnlocked;
-use App\Events\BadgeUnlocked;
 use App\Events\PurchaseEvent;
 use App\Models\Achievement;
-use App\Models\User;
-use App\Models\UserAchievement;
 
 class HandlePurchaseEvent
 {
@@ -40,6 +37,9 @@ class HandlePurchaseEvent
             ->whereNotIn('id', $alreadyUnlockedIds);
 
 
-        event(new AchievementUnlocked($newAchievements, $user));
+        if ($newAchievements->isNotEmpty()) {
+            event(new AchievementUnlocked($newAchievements, $user));
+        }
+
     }
 }

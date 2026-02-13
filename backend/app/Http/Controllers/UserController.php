@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PurchaseEvent;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;

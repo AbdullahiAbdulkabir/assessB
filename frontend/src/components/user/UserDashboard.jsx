@@ -193,7 +193,7 @@ export default function UserDashboard({userId, userName = "Friend", userAvatar =
                                 >
                                     <Typography variant="body2" sx={{color: "#111827"}}>
                                         <b>{userAchData.remaining_to_unlock_next_badge ?? 0}</b> more
-                                        achievement(s)
+                                        order(s) to the next badge
                                     </Typography>
 
                                     <Stack direction="row" spacing={2} sx={{mt: 2}}

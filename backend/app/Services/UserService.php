@@ -6,7 +6,6 @@ use App\Http\Resources\AchievementResource;
 use App\Http\Resources\UserAchievementResource;
 use App\Models\Achievement;
 use App\Models\User;
-use App\Models\UserAchievement;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserService

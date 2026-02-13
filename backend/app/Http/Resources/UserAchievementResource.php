@@ -23,7 +23,7 @@ class UserAchievementResource extends JsonResource
             'next_available_achievements' => $this->nextAvailableAchievements(),
             'current_badge' => $this->currentAchievement?->badge,
             'next_badge' => $this->nextAchievement()?->badge,
-            'remaining_to_unlock_next_badge' =>  $this->nextAvailableAchievementsCount()
+            'remaining_to_unlock_next_badge' =>  $this->remainingToUnlockAchievementsCount()
         ];
     }
 }
