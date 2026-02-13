@@ -12,6 +12,9 @@ cd backend
 cd backend && composer install
 ```
 
+Sample response from postman, i am using uuid instead of id to get a user to avoid knowing the number of data in the users table
+![Postman sample](sample-response.jpeg "Postman sample")
+
 ## Environment Configuration
 
 Copy the example environment file and set up the required configurations:
