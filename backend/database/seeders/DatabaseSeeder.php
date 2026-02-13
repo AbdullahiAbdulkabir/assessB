@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             'user_id' => $user->id,
         ]);
 
+//        sample achievement each has a batch attached to it
         $achievements = [
             ['name' => "Baby Shopper", 'no_of_orders' => 5, 'badge' => "https://template.canva.com/EAGpJXD4VvY/1/5/1131w-U8uYaQbecAM.jpg"],
             ['name' => "Medium Shopper", 'no_of_orders' => 10, 'badge' => "https://www.svgrepo.com/show/452101/silver-medal.svg"],
