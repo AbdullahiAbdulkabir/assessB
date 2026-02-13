@@ -1,6 +1,6 @@
 ## Loyalty Program
 
-This repo contains the frontend and backend project.
+This repo contains the frontend and backend project. I am assuming each achievement unlocks a new badge
 
 ## Backend Installation
 Clone the repository and install dependencies:
