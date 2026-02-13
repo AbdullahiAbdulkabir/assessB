@@ -2,6 +2,8 @@
 
 namespace App\Listeners;
 
+use App\Events\AchievementUnlocked;
+use App\Events\BadgeUnlocked;
 use App\Events\PurchaseEvent;
 use App\Models\User;
 
@@ -20,6 +22,10 @@ class UpdateUserAchievement
      */
     public function handle(PurchaseEvent $event): void
     {
+
 //        do something here and run the check to trigger an event
+        event(new AchievementUnlocked());
+
+        event(new BadgeUnlocked());
     }
 }
