@@ -3,7 +3,7 @@
 This repo contains the frontend and backend project. I am assuming each achievement unlocks a new badge
 
 ## Backend Installation
-Clone the repository and install dependencies:
+Clone the repository and install dependencies (requires 8.2 upwards):
 
 ```bash
 cd backend
@@ -74,7 +74,7 @@ cd backend && php artisan route:cache
 cd backend && php artisan view:cache
 ```
 
-For the frontend 
+For the frontend requires node 20 upwards
 Use npm or yarn
 ```bash
 npm install
