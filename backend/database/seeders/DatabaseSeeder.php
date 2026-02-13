@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Achievement;
-use App\Models\Order;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,18 +17,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::firstWhere('email','test@example.com');
-        if (!$user){
+        $user = User::firstWhere('email', 'test@example.com');
+        if (!$user) {
             $user = User::factory()->create([
                 'name' => 'Test User',
                 'email' => 'test@example.com',
             ]);
         }
-
-
-        Order::factory(2)->create([
-            'user_id' => $user->id,
-        ]);
 
 //        sample achievement each has a batch attached to it
         $achievements = [

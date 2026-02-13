@@ -47,6 +47,14 @@ Start the development server:
 cd backend && php artisan serve
 ```
 
+Test purchase trigger for default user:
+
+```bash
+cd backend && php artisan app:trigger-purchase-event
+```
+
+
+
 Visit the url.
 
 ```bash

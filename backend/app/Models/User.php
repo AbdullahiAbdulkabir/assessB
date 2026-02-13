@@ -73,12 +73,12 @@ class User extends Authenticatable
 
     public function unlockedAchievements(): array
     {
-        return Achievement::where('no_of_orders', '<=', $this->currentAchievement->no_of_orders)->pluck('name')->toArray() ?? [];
+        return Achievement::where('no_of_orders', '<=', $this->currentAchievement?->no_of_orders ?? 0)->pluck('name')->toArray() ?? [];
     }
 
     public function nextAvailableAchievements(): array
     {
-        return Achievement::where('no_of_orders', '>=', $this->currentAchievement->no_of_orders)->pluck('name')->toArray() ?? [];
+        return Achievement::where('no_of_orders', '>=', $this->currentAchievement?->no_of_orders ?? 0)->pluck('name')->toArray() ?? [];
     }
 
     public function nextAvailableAchievementsCount(): int
